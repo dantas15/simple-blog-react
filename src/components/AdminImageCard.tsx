@@ -1,14 +1,18 @@
 import {
   createStyles,
   Card,
-  Image,
-  Avatar,
   Text,
   Group,
   ActionIcon,
+  LoadingOverlay,
 } from '@mantine/core';
-import { IconEditCircle, IconTrash, IconTrashOff } from '@tabler/icons';
+import { showNotification } from '@mantine/notifications';
+import { IconEditCircle, IconTrash, IconX } from '@tabler/icons';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import api from '../services/api';
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -28,18 +32,44 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface AdminImageCardProps {
+  id: string;
+  slug: string;
   title: string;
-  content: string;
   date: string;
 }
 
-export function AdminImageCard({ title, content, date }: AdminImageCardProps) {
+export function AdminImageCard({ id, slug, title, date }: AdminImageCardProps) {
+  const [loading, setLoading] = useState(false);
+
   const { classes } = useStyles();
 
   const navigate = useNavigate();
 
+  async function handleDelete() {
+    try {
+      setLoading(true);
+      await api.delete(`/posts/${id}`);
+      navigate(0);
+    } catch (e) {
+      showNotification({
+        title: 'Error!',
+        message: "Couldn't delete the post",
+        icon: <IconX size={18} />,
+        color: 'red',
+      });
+      console.error(e);
+    }
+
+    setLoading(false);
+  }
+
+  dayjs.extend(utc);
+
+  const postDate = dayjs.utc(date).local().format('DD-MM-YYYY [às] HH:mm');
+
   return (
-    <Card withBorder radius="md" p={0} className={classes.card}>
+    <Card withBorder radius="md" p={0} mb={4} className={classes.card}>
+      <LoadingOverlay visible={loading} overlayBlur={2} />
       <Group noWrap spacing={0}>
         <div className={classes.body}>
           <Text className={classes.title} mt="xs" mb="md">
@@ -51,7 +81,7 @@ export function AdminImageCard({ title, content, date }: AdminImageCardProps) {
                 size={20}
                 variant="filled"
                 color={'blue'}
-                onClick={() => navigate('edit/123')}
+                onClick={() => navigate(`/app/post?slug=${slug}`)}
               >
                 <IconEditCircle size={14} />
               </ActionIcon>
@@ -59,7 +89,7 @@ export function AdminImageCard({ title, content, date }: AdminImageCardProps) {
                 size={20}
                 variant="filled"
                 color={'red'}
-                onClick={() => console.log('delete')}
+                onClick={handleDelete}
               >
                 <IconTrash size={14} />
               </ActionIcon>
@@ -68,7 +98,7 @@ export function AdminImageCard({ title, content, date }: AdminImageCardProps) {
               •
             </Text>
             <Text size="xs" color="dimmed">
-              Data: {date}
+              {postDate}
             </Text>
           </Group>
         </div>

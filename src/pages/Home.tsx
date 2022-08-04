@@ -1,33 +1,50 @@
-import { useState } from 'react';
-import { Container, SimpleGrid } from '@mantine/core';
+import { useEffect, useState } from 'react';
+import { Container, LoadingOverlay, SimpleGrid } from '@mantine/core';
+import { IconX } from '@tabler/icons';
 
 import { ImageCard } from '../components/ImageCard';
-import { Post } from '../interfaces/Post';
+import { Post, PostWithUser } from '../interfaces/Post';
+import { showNotification } from '@mantine/notifications';
+import { PostsResponse } from './Admin';
+import api from '../services/api';
 
 export function Home() {
-  const [posts, setPosts] = useState<Post[]>([
-    {
-      id: '123',
-      title: 'Hello world',
-      content: '<h1>Hello World</h1>',
-      slug: 'hello-world',
-      created_at: '2020-01-01',
-      updated_at: '2020-01-01',
-      user_id: '123',
-    },
-  ]);
+  const [posts, setPosts] = useState<PostWithUser[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        setLoading(true);
+        const response = await api.get<PostsResponse>('/posts');
+        setPosts(response.data.data);
+      } catch (e) {
+        showNotification({
+          title: 'Error!',
+          message: "Couldn't load the posts",
+          icon: <IconX size={18} />,
+          color: 'red',
+        });
+        console.error(e);
+      }
+
+      setLoading(false);
+    })();
+  }, []);
 
   return (
     <Container mt={20} mb={30}>
+      <LoadingOverlay visible={loading} overlayBlur={2} />
+
       <SimpleGrid cols={3}>
-        {posts.map((item) => (
+        {posts.map((post, index) => (
           <ImageCard
-            author="gus"
-            comments={2}
-            image={`https://source.unsplash.com/random/?Programming&${item.slug}`}
-            link={`/post/${item.slug}`}
-            title="Programming"
-            key={item.id}
+            date={post.created_at}
+            author={post.user.name}
+            image={`https://source.unsplash.com/random/?Programming&${index}`}
+            link={`/post/${post.slug}`}
+            title={post.title}
+            key={post.id}
           />
         ))}
       </SimpleGrid>

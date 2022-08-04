@@ -2,7 +2,6 @@ import {
   Button,
   Divider,
   LoadingOverlay,
-  Notification,
   TextInput,
   Title,
 } from '@mantine/core';
@@ -10,10 +9,10 @@ import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { RichTextEditor } from '@mantine/rte';
 
-import { FormEvent, ReactNode, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { IconX } from '@tabler/icons';
+import { IconX, IconCheck } from '@tabler/icons';
 
 import { Post, PostForm } from '../interfaces/Post';
 import api from '../services/api';
@@ -40,7 +39,7 @@ export function FormPost() {
             title: 'Looking for the post...',
             message: 'Please wait...',
             loading: true,
-            autoClose: 5000,
+            autoClose: 1000,
           });
 
           const response = await api.get<PostReturnType>(
@@ -95,6 +94,14 @@ export function FormPost() {
         } = await api.post<PostReturnType>('/posts', values);
 
         setParams({ slug: data.slug });
+
+        showNotification({
+          title: 'Success!',
+          message: 'Post has been created successfully!',
+          icon: <IconCheck size={18} />,
+          color: 'teal',
+          autoClose: 2500,
+        });
       } catch (e) {
         showNotification({
           title: 'Error!',
@@ -113,6 +120,14 @@ export function FormPost() {
       } = await api.put<PostReturnType>(`/posts/${postData.id}`, values);
 
       setParams({ slug: data.slug });
+
+      showNotification({
+        title: 'Success!',
+        message: 'Post has been saved successfully!',
+        icon: <IconCheck size={18} />,
+        color: 'teal',
+        autoClose: 2500,
+      });
     } catch (e) {
       showNotification({
         title: 'Error!',

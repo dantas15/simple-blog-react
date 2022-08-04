@@ -1,5 +1,8 @@
 import { IconMessageCircle } from '@tabler/icons';
 import { Card, Text, Group, Center, createStyles } from '@mantine/core';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import { useNavigate } from 'react-router-dom';
 
 const useStyles = createStyles((theme, _params, getRef) => {
   const image = getRef('image');
@@ -69,17 +72,23 @@ interface ImageCardProps {
   image: string;
   title: string;
   author: string;
-  comments: number;
+  date: string;
 }
 
 export function ImageCard({
   image,
   title,
   author,
-  comments,
   link,
+  date,
 }: ImageCardProps) {
   const { classes, theme } = useStyles();
+
+  const navigate = useNavigate();
+
+  dayjs.extend(utc);
+
+  const postDate = dayjs.utc(date).local().format('DD-MM-YYYY [às] HH:mm');
 
   return (
     <Card
@@ -88,7 +97,10 @@ export function ImageCard({
       className={classes.card}
       radius="md"
       component="a"
-      href={link}
+      onClick={() => {
+        navigate(link);
+      }}
+      style={{ cursor: 'pointer' }}
       target="_blank"
     >
       <div
@@ -110,15 +122,19 @@ export function ImageCard({
 
             <Group spacing="lg">
               <Center>
+                {/*
                 <IconMessageCircle
                   size={16}
                   stroke={1.5}
                   color={theme.colors.dark[2]}
                 />
-                <Text size="sm" className={classes.bodyText}>
+                 <Text size="sm" className={classes.bodyText}>
                   {comments}
-                </Text>
+                </Text> */}
               </Center>
+              <Text size="sm" className={classes.bodyText}>
+                {postDate}
+              </Text>
             </Group>
           </Group>
         </div>

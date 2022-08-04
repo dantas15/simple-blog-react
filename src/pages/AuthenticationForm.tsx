@@ -60,13 +60,13 @@ export function AuthenticationForm(props: PaperProps) {
 
   if (authenticated) {
     navigate('/');
-    return;
   }
 
   const handleSubmit = async (
     values: UserForm,
     event: FormEvent<HTMLFormElement>,
   ) => {
+    event.preventDefault();
     setLoading(true);
 
     if (type === 'login') {

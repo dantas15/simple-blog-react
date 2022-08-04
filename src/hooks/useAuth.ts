@@ -56,6 +56,7 @@ export function useAuth() {
       setUserEmail(data.user.email);
       setUserIsAdmin(data.user.is_admin ? true : false);
 
+      localStorage.setItem('access_token', data.access_token);
       localStorage.setItem('userId', data.user.id);
       localStorage.setItem('userName', data.user.name);
       localStorage.setItem('userEmail', data.user.email);
