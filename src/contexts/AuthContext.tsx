@@ -1,12 +1,11 @@
 import { createContext, ReactNode } from 'react';
 
-import { useAuth } from '../hooks/useAuth';
-import { UserForm } from '../interfaces/User';
+import { LoginRequest, useAuth } from '../hooks/useAuth';
 
 interface UseAuthReturnType {
   authenticated: boolean;
   loading: boolean;
-  handleLogin: ({ email, password }: UserForm) => Promise<void>;
+  handleLogin: ({ email, password }: LoginRequest) => Promise<void>;
   handleLogout: () => void;
   userId: string | null;
   userName: string | null;

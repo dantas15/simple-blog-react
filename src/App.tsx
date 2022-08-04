@@ -3,26 +3,20 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { Footer } from './components/Footer';
 import { Navbar } from './components/Navbar';
+import { AuthContextProvider } from './contexts/AuthContext';
 import { Routes } from './routes';
-
-const tabs = [
-  { label: 'Home', link: '/' },
-  { label: 'Login', link: '/login' },
-  { label: 'Admin', link: '/app' },
-];
-
-const user = {
-  name: 'John Doe',
-  image: 'https://github.com/gusgalote.png',
-};
 
 export function App() {
   return (
     <BrowserRouter>
       <MantineProvider withGlobalStyles withNormalizeCSS>
-        <Navbar user={user} tabs={tabs} />
-        <Routes />
-        <Footer />
+        <AuthContextProvider>
+          <>
+            <Navbar />
+            <Routes />
+            <Footer />
+          </>
+        </AuthContextProvider>
       </MantineProvider>
     </BrowserRouter>
   );

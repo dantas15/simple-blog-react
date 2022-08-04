@@ -5,11 +5,16 @@ import { User, UserForm } from '../interfaces/User';
 
 import api from '../services/api';
 
-interface LoginResponse {
+export type LoginRequest = Omit<UserForm, 'password_confirmation' | 'name'>;
+
+export interface LoginResponse {
   access_token: string;
   token_type: string;
   expires_in: number;
   user: User;
+  errors?: {
+    [key: string]: string;
+  };
 }
 
 export function useAuth() {
@@ -39,7 +44,7 @@ export function useAuth() {
     setLoading(false);
   }, []);
 
-  async function handleLogin({ email, password }: UserForm) {
+  async function handleLogin({ email, password }: LoginRequest) {
     try {
       const { data } = await api.post<LoginResponse>('/login', {
         email,
@@ -83,7 +88,7 @@ export function useAuth() {
 
     api.defaults.headers.common['Authorization'] = '';
 
-    navigate('/');
+    location.reload();
   }
 
   return {

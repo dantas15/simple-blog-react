@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   createStyles,
   Container,
@@ -12,7 +13,7 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconLogout, IconChevronDown } from '@tabler/icons';
-import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthContext';
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -107,17 +108,25 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-interface HeaderTabsProps {
-  user?: { name: string; image: string };
-  tabs: { label: string; link: string }[];
-}
-
-export function Navbar({ user, tabs }: HeaderTabsProps) {
+export function Navbar() {
   const { classes, theme, cx } = useStyles();
   const [opened, { toggle }] = useDisclosure(false);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
 
   const navigate = useNavigate();
+
+  const { authenticated, userIsAdmin, handleLogout, userName } =
+    useContext(AuthContext);
+
+  const tabs = [{ label: 'Home', link: '/' }];
+
+  if (!authenticated) {
+    tabs.push({ label: 'Login', link: '/login' });
+  }
+
+  if (userIsAdmin) {
+    tabs.push({ label: 'Admin', link: '/app' });
+  }
 
   const items = tabs.map((tab) => (
     <Tabs.Tab
@@ -150,7 +159,7 @@ export function Navbar({ user, tabs }: HeaderTabsProps) {
             onClose={() => setUserMenuOpened(false)}
             onOpen={() => setUserMenuOpened(true)}
           >
-            {user && (
+            {authenticated && (
               <Menu.Target>
                 <UnstyledButton
                   className={cx(classes.user, {
@@ -158,19 +167,14 @@ export function Navbar({ user, tabs }: HeaderTabsProps) {
                   })}
                 >
                   <Group spacing={7}>
-                    <Avatar
-                      src={user.image}
-                      alt={user.name}
-                      radius="xl"
-                      size={20}
-                    />
+                    <Avatar src={''} alt={''} radius="xl" size={20} />
                     <Text
                       weight={500}
                       size="sm"
                       sx={{ lineHeight: 1, color: theme.white }}
                       mr={3}
                     >
-                      {user.name}
+                      {userName}
                     </Text>
                     <IconChevronDown size={12} stroke={1.5} />
                   </Group>
@@ -216,7 +220,10 @@ export function Navbar({ user, tabs }: HeaderTabsProps) {
               {/* <Menu.Item icon={<IconSettings size={14} stroke={1.5} />}>
                 Account settings
               </Menu.Item> */}
-              <Menu.Item icon={<IconLogout size={14} stroke={1.5} />}>
+              <Menu.Item
+                icon={<IconLogout size={14} stroke={1.5} />}
+                onClick={handleLogout}
+              >
                 Logout
               </Menu.Item>
 
