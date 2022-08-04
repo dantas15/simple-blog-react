@@ -1,4 +1,14 @@
-import { createStyles, Card, Image, Avatar, Text, Group } from '@mantine/core';
+import {
+  createStyles,
+  Card,
+  Image,
+  Avatar,
+  Text,
+  Group,
+  ActionIcon,
+} from '@mantine/core';
+import { IconEditCircle, IconTrash, IconTrashOff } from '@tabler/icons';
+import { useNavigate } from 'react-router';
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -25,6 +35,9 @@ interface AdminImageCardProps {
 
 export function AdminImageCard({ title, content, date }: AdminImageCardProps) {
   const { classes } = useStyles();
+
+  const navigate = useNavigate();
+
   return (
     <Card withBorder radius="md" p={0} className={classes.card}>
       <Group noWrap spacing={0}>
@@ -33,14 +46,29 @@ export function AdminImageCard({ title, content, date }: AdminImageCardProps) {
             {title}
           </Text>
           <Group noWrap spacing="xs">
-            <Text size="xs" color="dimmed">
-              {content}
-            </Text>
+            <Group>
+              <ActionIcon
+                size={20}
+                variant="filled"
+                color={'blue'}
+                onClick={() => navigate('edit/123')}
+              >
+                <IconEditCircle size={14} />
+              </ActionIcon>
+              <ActionIcon
+                size={20}
+                variant="filled"
+                color={'red'}
+                onClick={() => console.log('delete')}
+              >
+                <IconTrash size={14} />
+              </ActionIcon>
+            </Group>
             <Text size="xs" color="dimmed">
               •
             </Text>
             <Text size="xs" color="dimmed">
-              {date}
+              Data: {date}
             </Text>
           </Group>
         </div>

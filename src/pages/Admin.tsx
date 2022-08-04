@@ -1,11 +1,35 @@
+import { ActionIcon, Divider, Group, Title } from '@mantine/core';
+import { IconPlus } from '@tabler/icons';
+import { useNavigate } from 'react-router';
 import { AdminImageCard } from '../components/AdminImageCard';
 
 export function Admin() {
-  console.log('oi');
+  const navigate = useNavigate();
+
   return (
-    <div>
-      <h1>Admin</h1>
+    <>
+      <Group grow>
+        <Title>Seus posts</Title>
+        <div
+          style={{
+            display: 'flex',
+            width: '100%',
+            flexDirection: 'row-reverse',
+          }}
+        >
+          <ActionIcon
+            color={'green'}
+            variant="outline"
+            onClick={() => navigate('create')}
+          >
+            <IconPlus />
+          </ActionIcon>
+        </div>
+      </Group>
+
+      <Divider my={15} />
+
       <AdminImageCard content="asdsads" date="1232" title="oi" />
-    </div>
+    </>
   );
 }

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import {
   Navbar,
-  Center,
   Tooltip,
   UnstyledButton,
   createStyles,
@@ -10,11 +9,10 @@ import {
 import {
   TablerIcon,
   IconHome2,
-  IconCalendarStats,
-  IconSettings,
   IconLogout,
-  IconSwitchHorizontal,
   IconUsers,
+  IconBlockquote,
+  IconPlus,
 } from '@tabler/icons';
 import { useNavigate } from 'react-router';
 
@@ -73,8 +71,8 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
 }
 
 const linksArr = [
-  { icon: IconHome2, label: 'Home', link: '/' },
-  { icon: IconCalendarStats, label: 'Posts', link: '/app' },
+  { icon: IconBlockquote, label: 'Posts', link: '/app' },
+  { icon: IconPlus, label: 'Create post', link: '/app/create' },
   { icon: IconUsers, label: 'Users', link: '/app/users' },
   // { icon: IconSettings, label: 'Settings' },
 ];
