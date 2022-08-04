@@ -10,7 +10,14 @@ import { Routes } from './routes';
 export function App() {
   return (
     <BrowserRouter>
-      <MantineProvider withGlobalStyles withNormalizeCSS>
+      <MantineProvider
+        withGlobalStyles
+        withNormalizeCSS
+        theme={{
+          fontFamily: 'Red Hat Text, sans-serif',
+          headings: { fontFamily: 'Red Hat Text, sans-serif' },
+        }}
+      >
         <NotificationsProvider>
           <AuthContextProvider>
             <>

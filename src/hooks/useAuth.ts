@@ -76,7 +76,7 @@ export function useAuth() {
     }
   }
 
-  function handleLogout() {
+  const handleLogout = () => {
     setUserId(null);
     setUserName(null);
     setUserEmail(null);
@@ -89,8 +89,8 @@ export function useAuth() {
 
     api.defaults.headers.common['Authorization'] = '';
 
-    location.reload();
-  }
+    navigate('/');
+  };
 
   return {
     authenticated,
