@@ -57,7 +57,7 @@ export function Admin() {
           <ActionIcon
             color={'green'}
             variant="outline"
-            onClick={() => navigate('create')}
+            onClick={() => navigate('post')}
           >
             <IconPlus />
           </ActionIcon>

@@ -46,10 +46,6 @@ const useStyles = createStyles((theme) => ({
         0.1,
       ),
     },
-
-    [theme.fn.smallerThan('xs')]: {
-      display: 'none',
-    },
   },
 
   burger: {
@@ -64,12 +60,6 @@ const useStyles = createStyles((theme) => ({
         .background,
       0.1,
     ),
-  },
-
-  tabs: {
-    [theme.fn.smallerThan('sm')]: {
-      display: 'none',
-    },
   },
 
   tabsList: {
@@ -142,8 +132,6 @@ export function Navbar() {
     <div className={classes.header}>
       <Container className={classes.mainSection}>
         <Group position="apart">
-          {/* <MantineLogo size={28} inverted /> */}
-
           <Burger
             opened={opened}
             onClick={toggle}
@@ -182,63 +170,13 @@ export function Navbar() {
               </Menu.Target>
             )}
             <Menu.Dropdown>
-              {/* <Menu.Item
-                icon={
-                  <IconHeart
-                    size={14}
-                    stroke={1.5}
-                    color={theme.colors.red[6]}
-                  />
-                }
-              >
-                Liked posts
-              </Menu.Item>
-              <Menu.Item
-                icon={
-                  <IconStar
-                    size={14}
-                    stroke={1.5}
-                    color={theme.colors.yellow[6]}
-                  />
-                }
-              >
-                Saved posts
-              </Menu.Item>
-              <Menu.Item
-                icon={
-                  <IconMessage
-                    size={14}
-                    stroke={1.5}
-                    color={theme.colors.blue[6]}
-                  />
-                }
-              >
-                Your comments
-              </Menu.Item> */}
-
               <Menu.Label>Settings</Menu.Label>
-              {/* <Menu.Item icon={<IconSettings size={14} stroke={1.5} />}>
-                Account settings
-              </Menu.Item> */}
               <Menu.Item
                 icon={<IconLogout size={14} stroke={1.5} />}
                 onClick={handleLogout}
               >
                 Logout
               </Menu.Item>
-
-              {/* <Menu.Divider />
-
-              <Menu.Label>Danger zone</Menu.Label>
-              <Menu.Item icon={<IconPlayerPause size={14} stroke={1.5} />}>
-                Pause subscription
-              </Menu.Item>
-              <Menu.Item
-                color="red"
-                icon={<IconTrash size={14} stroke={1.5} />}
-              >
-                Delete account
-              </Menu.Item> */}
             </Menu.Dropdown>
           </Menu>
         </Group>
@@ -246,8 +184,14 @@ export function Navbar() {
       <Container>
         <Tabs
           variant="outline"
+          style={{
+            display: theme.fn.smallerThan('sm')
+              ? opened
+                ? 'block'
+                : 'none'
+              : 'block',
+          }}
           classNames={{
-            root: classes.tabs,
             tabsList: classes.tabsList,
             tab: classes.tab,
           }}
