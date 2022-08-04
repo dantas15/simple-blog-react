@@ -36,7 +36,7 @@ export function AuthenticationForm(props: PaperProps) {
   });
 
   return (
-    <Container size={'xs'}>
+    <Container size={'xs'} mt={40} mb={40}>
       <Paper radius="md" p="xl" withBorder {...props}>
         {/* <Text size="lg" weight={500}>
           Welcome to my blog, {type} with

@@ -1,5 +1,6 @@
 import { MantineProvider } from '@mantine/core';
 import { BrowserRouter } from 'react-router-dom';
+import { AdminImageCard } from './components/AdminImageCard';
 import { Footer } from './components/Footer';
 import { Navbar } from './components/Navbar';
 import { Routes } from './routes';
@@ -7,6 +8,7 @@ import { Routes } from './routes';
 const tabs = [
   { label: 'Home', link: '/' },
   { label: 'Login', link: '/login' },
+  { label: 'Admin', link: '/app' },
 ];
 
 const user = {

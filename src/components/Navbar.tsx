@@ -25,7 +25,7 @@ const useStyles = createStyles((theme) => ({
       theme.fn.variant({ variant: 'filled', color: theme.primaryColor })
         .background
     }`,
-    marginBottom: 120,
+    // marginBottom: 120,
   },
 
   mainSection: {
