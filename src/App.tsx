@@ -1,4 +1,5 @@
 import { MantineProvider } from '@mantine/core';
+import { NotificationsProvider } from '@mantine/notifications';
 import { BrowserRouter } from 'react-router-dom';
 
 import { Footer } from './components/Footer';
@@ -10,13 +11,15 @@ export function App() {
   return (
     <BrowserRouter>
       <MantineProvider withGlobalStyles withNormalizeCSS>
-        <AuthContextProvider>
-          <>
-            <Navbar />
-            <Routes />
-            <Footer />
-          </>
-        </AuthContextProvider>
+        <NotificationsProvider>
+          <AuthContextProvider>
+            <>
+              <Navbar />
+              <Routes />
+              <Footer />
+            </>
+          </AuthContextProvider>
+        </NotificationsProvider>
       </MantineProvider>
     </BrowserRouter>
   );

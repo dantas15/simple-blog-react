@@ -8,7 +8,6 @@ import {
 } from '@mantine/core';
 import {
   TablerIcon,
-  IconHome2,
   IconLogout,
   IconUsers,
   IconBlockquote,
@@ -72,13 +71,13 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
 
 const linksArr = [
   { icon: IconBlockquote, label: 'Posts', link: '/app' },
-  { icon: IconPlus, label: 'Create post', link: '/app/create' },
+  { icon: IconPlus, label: 'Create post', link: '/app/post' },
   { icon: IconUsers, label: 'Users', link: '/app/users' },
   // { icon: IconSettings, label: 'Settings' },
 ];
 
 export function SideNav() {
-  const [active, setActive] = useState(1);
+  const [active, setActive] = useState(0);
 
   const navigate = useNavigate();
 

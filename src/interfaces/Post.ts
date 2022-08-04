@@ -15,6 +15,8 @@ export interface PostWithComments extends Post {
 }
 
 export interface PostForm {
+  id?: string;
   title: string;
   content: string;
+  slug?: string;
 }
