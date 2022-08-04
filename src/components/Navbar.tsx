@@ -11,17 +11,8 @@ import {
   Burger,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import {
-  IconLogout,
-  IconHeart,
-  IconStar,
-  IconMessage,
-  IconSettings,
-  IconPlayerPause,
-  IconTrash,
-  IconSwitchHorizontal,
-  IconChevronDown,
-} from '@tabler/icons';
+import { IconLogout, IconChevronDown } from '@tabler/icons';
+import { useNavigate } from 'react-router-dom';
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -118,7 +109,7 @@ const useStyles = createStyles((theme) => ({
 
 interface HeaderTabsProps {
   user?: { name: string; image: string };
-  tabs: string[];
+  tabs: { label: string; link: string }[];
 }
 
 export function Navbar({ user, tabs }: HeaderTabsProps) {
@@ -126,9 +117,15 @@ export function Navbar({ user, tabs }: HeaderTabsProps) {
   const [opened, { toggle }] = useDisclosure(false);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
 
+  const navigate = useNavigate();
+
   const items = tabs.map((tab) => (
-    <Tabs.Tab value={tab} key={tab}>
-      {tab}
+    <Tabs.Tab
+      value={tab.label}
+      key={tab.link}
+      onClick={() => navigate(tab.link)}
+    >
+      {tab.label}
     </Tabs.Tab>
   ));
 

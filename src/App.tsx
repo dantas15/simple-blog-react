@@ -4,16 +4,7 @@ import { Footer } from './components/Footer';
 import { Navbar } from './components/Navbar';
 import { Routes } from './routes';
 
-const tabs = [
-  'Home',
-  'Orders',
-  'Education',
-  'Community',
-  'Forums',
-  'Support',
-  'Account',
-  'Helpdesk',
-];
+const tabs = [{ label: 'Home', link: '/' }];
 
 const user = {
   name: 'John Doe',

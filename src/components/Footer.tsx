@@ -3,6 +3,7 @@ import {
   IconBrandTwitter,
   IconBrandYoutube,
   IconBrandInstagram,
+  IconBrandGithub,
 } from '@tabler/icons';
 
 const useStyles = createStyles((theme) => ({
@@ -40,14 +41,19 @@ export function Footer() {
       <Container className={classes.inner}>
         {/* <MantineLogo size={28} /> */}
         <Group spacing={0} className={classes.links} position="right" noWrap>
-          <ActionIcon size="lg">
-            <IconBrandTwitter size={18} stroke={1.5} />
-          </ActionIcon>
-          <ActionIcon size="lg">
+          <ActionIcon
+            size="lg"
+            onClick={() => window.open('https://youtube.com')}
+          >
             <IconBrandYoutube size={18} stroke={1.5} />
           </ActionIcon>
-          <ActionIcon size="lg">
-            <IconBrandInstagram size={18} stroke={1.5} />
+          <ActionIcon
+            size="lg"
+            onClick={() =>
+              window.open('https://github.com/gusgalote/simple-blog-react')
+            }
+          >
+            <IconBrandGithub size={18} stroke={1.5} />
           </ActionIcon>
         </Group>
       </Container>
