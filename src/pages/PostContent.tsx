@@ -1,84 +1,188 @@
+import { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   Button,
   Container,
   Divider,
-  Group,
+  LoadingOverlay,
   Textarea,
   Title,
 } from '@mantine/core';
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { IconX, IconCheck } from '@tabler/icons';
+import { showNotification } from '@mantine/notifications';
+
 import { Comments } from '../components/Comments';
 import { CommentWithUser } from '../interfaces/Comment';
-import { Post, PostWithComments } from '../interfaces/Post';
+import { PostWithComments } from '../interfaces/Post';
+import { AuthContext } from '../contexts/AuthContext';
+
+import api from '../services/api';
+
+type PostReturnType = { data: PostWithComments };
+type CommentsReturnType = { data: CommentWithUser[] };
+type CreateCommentReturnType = { data: CommentWithUser };
 
 export function PostContent() {
-  const [post, setPost] = useState<Post>({
-    id: '123',
-    title: 'Hello world',
-    content: '<ul><li>oi</li></ul>',
-    slug: 'hello-world',
-    created_at: '2020-01-01',
-    updated_at: '2020-01-01',
-    user_id: '123',
-  });
+  const { authenticated } = useContext(AuthContext);
+  const [loadingComments, setLoadingComments] = useState(false);
+
+  const [post, setPost] = useState<PostWithComments>();
   const [comments, setComments] = useState<CommentWithUser[]>([]);
+
   const [newCommentString, setNewCommentString] = useState('');
 
   const params = useParams();
+  const navigate = useNavigate();
+
+  const slug = params.slug;
 
   useEffect(() => {
-    // alert('slug: ' + params.slug);
-  }, [params.slug]);
+    (async () => {
+      try {
+        setLoadingComments(true);
+        const response = await api.get<PostReturnType>(`/posts/${slug}`);
+        const postId = response.data.data.id;
+        setPost(response.data.data);
+        try {
+          const response = await api.get<CommentsReturnType>(
+            `/posts/${postId}/comments`,
+          );
+          setComments(response.data.data);
+          setLoadingComments(false);
+        } catch {
+          setLoadingComments(false);
+          showNotification({
+            title: 'Error!',
+            message: 'No comment was found',
+            icon: <IconX size={18} />,
+            color: 'red',
+          });
+        }
+      } catch {
+        showNotification({
+          title: 'Error!',
+          message: 'The post was not found',
+          icon: <IconX size={18} />,
+          color: 'red',
+        });
+      }
+    })();
+  }, [slug]);
 
-  const handleCreateNewComment = (event: FormEvent) => {
+  const handleCreateNewComment = async (event: FormEvent) => {
     event.preventDefault();
 
-    // setComments([...comments, newCommentString]);
+    if (!post) {
+      console.log('Post not found');
+      return;
+    }
 
-    // setNewCommentString('');
+    if (!authenticated) {
+      navigate('/login');
+      return;
+    }
+
+    try {
+      const response = await api.post<CreateCommentReturnType>(
+        `/comments/${post.id}`,
+        {
+          content: newCommentString,
+        },
+      );
+      setComments([...comments, response.data.data]);
+      setNewCommentString('');
+      showNotification({
+        title: 'Success!',
+        message: 'The comment was created',
+        icon: <IconCheck size={18} />,
+        color: 'lime',
+      });
+    } catch {
+      showNotification({
+        title: 'Error!',
+        message: 'The comment was not created',
+        icon: <IconX size={18} />,
+        color: 'red',
+      });
+    }
   };
 
   const handleChangeNewComment = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setNewCommentString(event.target.value);
   };
 
-  const deleteComment = (commentToDeleteId: string) => {
-    // const commentsWithoutDeletedOne = comments.filter((comment) => {
-    //   return comment !== commentToDelete;
-    // });
-    // setComments(commentsWithoutDeletedOne);
+  const handleDeleteComment = async (commentToDeleteId: string) => {
+    try {
+      await api.delete(`/comments/${commentToDeleteId}`);
+
+      showNotification({
+        title: 'Success!',
+        message: 'The comment has been deleted successfully',
+        icon: <IconCheck size={18} />,
+        color: 'lime',
+      });
+      const commentsWithoutDeletedOne = comments.filter((comment) => {
+        return comment.id !== commentToDeleteId;
+      });
+      setComments(commentsWithoutDeletedOne);
+    } catch {
+      showNotification({
+        title: 'Error!',
+        message: 'The comment could not be deleted',
+        icon: <IconX size={18} />,
+        color: 'red',
+      });
+    }
   };
 
   const isNewCommentEmpty = newCommentString.length === 0;
 
   return (
     <Container mt={20} mb={30}>
-      <Title>{post.title}</Title>
+      {!post ? (
+        <div style={{ width: '100%', height: '100%' }}>
+          <LoadingOverlay visible={true} overlayBlur={2} />
+        </div>
+      ) : (
+        <>
+          <Title>{post.title}</Title>
 
-      <Divider mt={16} />
+          <Divider mt={16} />
 
-      <Container size={'sm'} my={32}>
-        <div dangerouslySetInnerHTML={{ __html: post.content }} />
-      </Container>
+          <Container size={'sm'} my={32}>
+            <div dangerouslySetInnerHTML={{ __html: post.content }} />
+          </Container>
 
-      <Divider title="Comments" mb={16} />
+          <Divider title="Comments" mb={16} />
+          <div>
+            <LoadingOverlay visible={loadingComments} overlayBlur={2} />
 
-      <form onSubmit={handleCreateNewComment}>
-        <Title order={6}>Leave your feedback</Title>
+            <form
+              onSubmit={handleCreateNewComment}
+              style={{ marginBottom: '1.5rem' }}
+            >
+              <Title order={6}>Leave your feedback</Title>
 
-        <Textarea
-          value={newCommentString}
-          onChange={handleChangeNewComment}
-          placeholder="Leave your comment here"
-          required
-        />
-        <Button type="submit" disabled={isNewCommentEmpty} mt={8}>
-          Comment
-        </Button>
-      </form>
+              <Textarea
+                value={newCommentString}
+                onChange={handleChangeNewComment}
+                placeholder="Leave your comment here"
+                required
+              />
+              <Button type="submit" disabled={isNewCommentEmpty} mt={8}>
+                Comment
+              </Button>
+            </form>
 
-      {comments.length > 0 && <Comments comments={comments} />}
+            {comments.length > 0 && (
+              <Comments
+                comments={comments}
+                handleDelete={handleDeleteComment}
+              />
+            )}
+          </div>
+        </>
+      )}
     </Container>
   );
 }

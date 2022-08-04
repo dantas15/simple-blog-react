@@ -68,7 +68,6 @@ export function AuthenticationForm(props: PaperProps) {
   ) => {
     event.preventDefault();
     setLoading(true);
-
     if (type === 'login') {
       await handleLogin({ email: values.email, password: values.password });
       setLoading(false);
@@ -88,7 +87,7 @@ export function AuthenticationForm(props: PaperProps) {
 
       setLoading(false);
     } catch (err) {
-      const e = err as AxiosError;
+      const e = err as AxiosError<any>;
       const errors = e!.response!.data!.errors ?? false;
       form.setErrors({
         email: errors.email ? errors.email[0] : null,
@@ -97,8 +96,8 @@ export function AuthenticationForm(props: PaperProps) {
           ? errors.password_confirmation[0]
           : null,
       });
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   return (
