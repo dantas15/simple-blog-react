@@ -4,6 +4,7 @@ import { Routes as RoutesWrapper, Route } from 'react-router-dom';
 import { SideNav } from '../components/SideNav';
 import { Admin } from '../pages/Admin';
 import { CreatePost } from '../pages/CreatePost';
+import { Users } from '../pages/Users';
 
 export function AdminArea() {
   return (
@@ -14,8 +15,8 @@ export function AdminArea() {
           <RoutesWrapper>
             <Route path={'/'} element={<Admin />} />
             <Route path={'create'} element={<CreatePost />} />
-            {/*<Route path={'edit/:id'} element={<Admin />} />
-            <Route path={'users'} element={<Admin />} /> */}
+            {/*<Route path={'edit/:id'} element={<Admin />} /> */}
+            <Route path={'users'} element={<Users />} />
           </RoutesWrapper>
         </Container>
       </div>

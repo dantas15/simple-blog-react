@@ -1,0 +1,20 @@
+import { Comment } from './Comment';
+
+export interface Post {
+  id: string;
+  title: string;
+  content: string;
+  slug: string;
+  user_id: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PostWithComments extends Post {
+  comments: Comment[];
+}
+
+export interface PostForm {
+  title: string;
+  content: string;
+}

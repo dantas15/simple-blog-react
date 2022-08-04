@@ -9,7 +9,7 @@ export function Admin() {
   return (
     <>
       <Group grow>
-        <Title>Seus posts</Title>
+        <Title>Your posts</Title>
         <div
           style={{
             display: 'flex',

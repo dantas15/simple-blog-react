@@ -3,35 +3,45 @@ import { useForm } from '@mantine/form';
 import {
   TextInput,
   PasswordInput,
-  Text,
   Paper,
   Group,
   PaperProps,
   Button,
-  Divider,
-  Checkbox,
   Anchor,
   Stack,
   Container,
 } from '@mantine/core';
+import { UserForm } from '../interfaces/User';
 
 export function AuthenticationForm(props: PaperProps) {
   const [type, toggle] = useToggle(['login', 'register']);
-  const form = useForm({
+  const form = useForm<UserForm>({
     initialValues: {
       email: '',
       name: '',
       password: '',
       password_confirmation: '',
-      terms: true,
     },
 
-    validate: {
-      email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
-      password: (val) =>
-        val.length <= 6
-          ? 'Password should include at least 6 characters'
-          : null,
+    validate: (values) => {
+      if (type === 'register') {
+        return {
+          email: /^\S+@\S+$/.test(values.email) ? null : 'Invalid email',
+          password:
+            values.password.length <= 6
+              ? 'Password should include at least 6 characters'
+              : null,
+          password_confirmation:
+            values.password_confirmation !== values.password
+              ? 'Passwords do not match'
+              : null,
+        };
+      }
+
+      return {
+        email: /^\S+@\S+$/.test(values.email) ? null : 'Invalid email',
+        password: values.password ? null : 'Enter your password',
+      };
     },
   });
 
@@ -107,13 +117,6 @@ export function AuthenticationForm(props: PaperProps) {
                     type === 'register' &&
                     form.errors.password_confirmation &&
                     'Passwords do not match'
-                  }
-                />
-                <Checkbox
-                  label="I accept terms and conditions"
-                  checked={form.values.terms}
-                  onChange={(event) =>
-                    form.setFieldValue('terms', event.currentTarget.checked)
                   }
                 />
               </>
