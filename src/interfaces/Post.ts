@@ -1,4 +1,4 @@
-import { Comment } from './Comment';
+import { CommentWithUser } from './Comment';
 
 export interface Post {
   id: string;
@@ -11,7 +11,7 @@ export interface Post {
 }
 
 export interface PostWithComments extends Post {
-  comments: Comment[];
+  comments: CommentWithUser[];
 }
 
 export interface PostForm {
