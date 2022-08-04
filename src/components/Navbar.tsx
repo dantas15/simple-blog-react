@@ -121,7 +121,7 @@ export function Navbar({ user, tabs }: HeaderTabsProps) {
 
   const items = tabs.map((tab) => (
     <Tabs.Tab
-      value={tab.label}
+      value={tab.link}
       key={tab.link}
       onClick={() => navigate(tab.link)}
     >

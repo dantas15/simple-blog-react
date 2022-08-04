@@ -4,7 +4,10 @@ import { Footer } from './components/Footer';
 import { Navbar } from './components/Navbar';
 import { Routes } from './routes';
 
-const tabs = [{ label: 'Home', link: '/' }];
+const tabs = [
+  { label: 'Home', link: '/' },
+  { label: 'Login', link: '/login' },
+];
 
 const user = {
   name: 'John Doe',
