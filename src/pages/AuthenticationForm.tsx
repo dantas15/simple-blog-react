@@ -62,10 +62,10 @@ export function AuthenticationForm(props: PaperProps) {
     navigate('/');
   }
 
-  const handleSubmit = async (
+  async function handleSubmit (
     values: UserForm,
     event: FormEvent<HTMLFormElement>,
-  ) => {
+  ) {
     event.preventDefault();
     setLoading(true);
     if (type === 'login') {

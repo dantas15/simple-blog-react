@@ -100,13 +100,18 @@ const useStyles = createStyles((theme) => ({
 
 export function Navbar() {
   const { classes, theme, cx } = useStyles();
-  const [opened, { toggle }] = useDisclosure(false);
+  const [opened, { toggle }] = useDisclosure(true);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
 
   const navigate = useNavigate();
 
-  const { authenticated, userIsAdmin, handleLogout, userName } =
-    useContext(AuthContext);
+  const authContext = useContext(AuthContext);
+
+  if (!authContext) {
+    throw new Error('Must be inside AuthContextProvider');
+  }
+
+  const { authenticated, userIsAdmin, userName, handleLogout } = authContext;
 
   const tabs = [{ label: 'Home', link: '/' }];
 

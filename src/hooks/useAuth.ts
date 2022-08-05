@@ -29,17 +29,30 @@ export function useAuth() {
   const [userIsAdmin, setUserIsAdmin] = useState<boolean>(false);
 
   useEffect(() => {
-    const access_token = localStorage.getItem('access_token');
-    if (access_token) {
-      api.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+    (async () => {
+      const access_token = localStorage.getItem('access_token');
+      if (access_token) {
+        api.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
 
-      setAuthenticated(true);
+        try {
+          const { data } = await api.get<User>('/show');
 
-      setUserId(localStorage.getItem('userId'));
-      setUserName(localStorage.getItem('userName'));
-      setUserEmail(localStorage.getItem('userEmail'));
-      setUserIsAdmin(localStorage.getItem('userIsAdmin') ? true : false);
-    }
+          setUserId(data.id);
+          setUserName(data.name);
+          setUserEmail(data.email);
+          setUserIsAdmin(data.is_admin ? true : false);
+
+          localStorage.setItem('access_token', access_token);
+          localStorage.setItem('userId', data.id);
+          localStorage.setItem('userName', data.name);
+          localStorage.setItem('userEmail', data.email);
+          localStorage.setItem('userIsAdmin', data.is_admin ? 'true' : 'false');
+        } catch {
+          localStorage.removeItem('access_token');
+          navigate('/login');
+        }
+      }
+    })();
 
     setLoading(false);
   }, []);
@@ -82,6 +95,7 @@ export function useAuth() {
     setUserEmail(null);
     setUserIsAdmin(false);
 
+    localStorage.removeItem('access_token');
     localStorage.removeItem('userId');
     localStorage.removeItem('userName');
     localStorage.removeItem('userEmail');
@@ -89,7 +103,7 @@ export function useAuth() {
 
     api.defaults.headers.common['Authorization'] = '';
 
-    navigate('/');
+    navigate(0);
   };
 
   return {
